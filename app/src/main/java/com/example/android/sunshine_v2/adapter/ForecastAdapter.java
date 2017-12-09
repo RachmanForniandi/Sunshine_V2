@@ -16,18 +16,30 @@ import com.example.android.sunshine_v2.R;
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapterViewHolder>{
 
     private String[] mWeatherData;
+    private final ForecastAdapterOnclickHandler mClickHandler;
 
-    public ForecastAdapter(){
-
+    public interface ForecastAdapterOnclickHandler{
+        void onClick(String weatherForDay);
     }
 
-    public class ForecastAdapterViewHolder extends RecyclerView.ViewHolder{
+    public ForecastAdapter(ForecastAdapterOnclickHandler clickHandler){
+        mClickHandler = clickHandler;
+    }
 
+    public class ForecastAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView mWeatherTextView;
 
         public ForecastAdapterViewHolder(View view){
             super(view);
             mWeatherTextView = (TextView) view.findViewById(R.id.txt_view_weather_data);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            String weatherForDay = mWeatherData[adapterPosition];
+            mClickHandler.onClick(weatherForDay);
         }
     }
 
@@ -50,9 +62,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdForListData, viewGroup, shouldAttachToParentImmediately);
-        ForecastAdapterViewHolder viewHolder = new ForecastAdapterViewHolder(view);
-
-        return viewHolder;
+        return new ForecastAdapterViewHolder(view);
     }
 
     /**
@@ -66,7 +76,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
      * @param position                  The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(ForecastAdapterViewHolder forecastAdapterViewHolder, int position) {
+    public void onBindViewHolder(ForecastAdapterViewHolder forecastAdapterViewHolder, int position){
         String currentWeather = mWeatherData[position];
         forecastAdapterViewHolder.mWeatherTextView.setText(currentWeather);
     }

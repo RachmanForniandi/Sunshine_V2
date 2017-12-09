@@ -1,5 +1,6 @@
 package com.example.android.sunshine_v2;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.sunshine_v2.adapter.ForecastAdapter;
 import com.example.android.sunshine_v2.data.SunshinePreferences;
@@ -19,7 +21,7 @@ import com.example.android.sunshine_v2.utilities.OpenWeatherJsonUtils;
 
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ForecastAdapter.ForecastAdapterOnclickHandler {
 
     //Create a field to store the weather display TextView
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
          */
         mRecyclerView = (RecyclerView)findViewById(R.id.rcView_forecast);
         mErrorMessageDisplay = (TextView)findViewById(R.id.txt_view_error_message_display);
+
 
         //Create layoutManager, a LinearLayoutManager with VERTICAL orientation and shouldReverseLayout == false
         /*
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
          * The ForecastAdapter is responsible for linking our weather data with the Views that
          * will end up displaying our weather data.
          */
-        mForecastAdapter = new ForecastAdapter();
+        mForecastAdapter = new ForecastAdapter(this);
 
         //Use mRecyclerView.setAdapter and pass in mForecastAdapter
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
@@ -91,6 +94,21 @@ public class MainActivity extends AppCompatActivity {
         
         String location = SunshinePreferences.getPreferredWeatherLocation(this);
         new FetchWeatherTask().execute(location);
+    }
+
+    // Override ForecastAdapterOnClickHandler's onClick method
+    // Show a Toast when an item is clicked, displaying that item's weather data
+    /**
+     * This method is overridden by our MainActivity class in order to handle RecyclerView item
+     * clicks.
+     *
+     * @param weatherForDay The weather for the day that was clicked
+     */
+    @Override
+    public void onClick(String weatherForDay){
+        Context context = this;
+        Toast.makeText(context, weatherForDay, Toast.LENGTH_SHORT)
+                .show();
     }
 
     //Create a method called showWeatherDataView that will hide the error message and show the weather data
