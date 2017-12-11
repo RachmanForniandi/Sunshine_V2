@@ -111,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.F
         // Remove the Toast and launch the DetailActivity using an explicit Intent
         Class destinationClass = DetailActivity.class;
         Intent intentToDetailActivity = new Intent(context, destinationClass);
+
+        //Pass the weather to the DetailActivity by implicit Intent
+        intentToDetailActivity.putExtra(Intent.EXTRA_TEXT, weatherForDay);
         startActivity(intentToDetailActivity);
     }
 
