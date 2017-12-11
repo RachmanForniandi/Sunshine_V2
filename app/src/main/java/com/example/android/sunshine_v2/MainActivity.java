@@ -1,6 +1,7 @@
 package com.example.android.sunshine_v2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.sunshine_v2.adapter.ForecastAdapter;
 import com.example.android.sunshine_v2.data.SunshinePreferences;
@@ -107,8 +107,11 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.F
     @Override
     public void onClick(String weatherForDay){
         Context context = this;
-        Toast.makeText(context, weatherForDay, Toast.LENGTH_SHORT)
-                .show();
+
+        // Remove the Toast and launch the DetailActivity using an explicit Intent
+        Class destinationClass = DetailActivity.class;
+        Intent intentToDetailActivity = new Intent(context, destinationClass);
+        startActivity(intentToDetailActivity);
     }
 
     //Create a method called showWeatherDataView that will hide the error message and show the weather data
