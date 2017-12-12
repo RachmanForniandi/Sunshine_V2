@@ -2,11 +2,13 @@ package com.example.android.sunshine_v2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +25,8 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements ForecastAdapter.ForecastAdapterOnclickHandler {
 
-    //Create a field to store the weather display TextView
+    //Create a field to store the weather display TextView and else
+    private static  final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
     private ForecastAdapter mForecastAdapter;
@@ -184,6 +187,21 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.F
         }
     }
 
+    private void openLocationMap(){
+        String addressString = "abc_ic_menu_share_mtrl_alpha";
+        Uri geoLocation = Uri.parse("geo:0,0?q=" + addressString);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+
+        if (intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
+        }else {
+            Log.d(TAG,"Couldn't call " + geoLocation.toString()
+                    + ", no receiving apps installed");
+        }
+    }
+
     //Override onCreateOptionsMenu to inflate the menu for this Activity
     //Return true to display the menu
     @Override
@@ -194,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.F
         inflater.inflate(R.menu.forecast, menu);
         /* Return true so that the menu is displayed in the Toolbar */
         return true;
+
     }
 
     //Override onOptionsItemSelected to handle clicks on the refresh button
@@ -201,9 +220,16 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.F
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
 
+        //action for refresh data weather
         if (id == R.id.action_refresh){
             mForecastAdapter.setWeatherData(null);
             loadWeatherData();
+            return true;
+        }
+
+        //Launch the map when the map menu item is clicked
+        if(id == R.id.action_map){
+            openLocationMap();
             return true;
         }
         return super.onOptionsItemSelected(item);
