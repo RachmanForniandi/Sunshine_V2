@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.F
     private ProgressBar mLoadingIndicator;
     private static final int FORECAST_LOADER_ID = 0;
 
+    //Add a private static boolean flag for preference updates and initialize it to false
     private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
 
     @Override
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.F
          *  true with horizontal lists that need to support a right-to-left layout.
          */
         boolean shouldReverseLayout = false;
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, recyclerViewOrientation, shouldReverseLayout);
         mRecyclerView.setLayoutManager(layoutManager);
 
         //Use setHasFixedSize(true) on mRecyclerView to designate that all items in the list will have the same size
@@ -219,7 +220,8 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.F
     @Override
     public void onLoadFinished(Loader<String[]> loader, String[] data) {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
-        if (null ==data){
+        mForecastAdapter.setWeatherData(data);
+        if (null == data){
             showErrorMessage();
         }else {
             showWeatherDataView();
