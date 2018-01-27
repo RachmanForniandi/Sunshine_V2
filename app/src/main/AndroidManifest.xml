@@ -28,6 +28,12 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".SettingsActivity"/>
+        <provider
+            android:authorities="@string/content_authority"
+            android:name=".data.WeatherProvider"
+            android:exported="false"/>
+
+
     </application>
 
 </manifest>
