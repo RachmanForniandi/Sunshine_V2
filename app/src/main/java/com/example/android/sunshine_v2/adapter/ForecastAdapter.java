@@ -24,7 +24,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     final private ForecastAdapterOnclickHandler mClickHandler;
 
     public interface ForecastAdapterOnclickHandler{
-        void onClick(String weatherForDay);
+        //Refactor onClick to accept a long as its parameter rather than a String
+        void onClick(long date);
     }
 
     private Cursor mCursor;
@@ -45,8 +46,11 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
 
         @Override
         public void onClick(View v) {
-            String weatherForDay = weatherSummary.getText().toString();
-            mClickHandler.onClick(weatherForDay);
+            int adapterPosition = getAdapterPosition();
+            //Instead of passing the String for the clicked item, pass the date from the cursor
+            mCursor.moveToPosition(adapterPosition);
+            long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE);
+            mClickHandler.onClick(dateInMillis);
         }
     }
 

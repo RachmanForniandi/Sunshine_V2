@@ -1,13 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/txt_view_display_weather"
+        android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="22sp"/>
+        style="@style/TextAppearance.AppCompat.Large"
+        tool:text="Tuesday, January 30"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/weather_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Large"
+        tool:text="Rainy"/>
+
+    <TextView
+        android:id="@+id/high_temperature_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Large"
+        tool:text="19\u00b0"/>
+
+    <TextView
+        android:id="@+id/low_temperature_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Large"
+        tool:text="19\u00b0"/>
+
+    <TextView
+        android:id="@+id/humidity_percentage_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Large"
+        tool:text="38%"/>
+
+    <TextView
+        android:id="@+id/pressure_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Large"
+        tool:text="995 hPa"/>
+
+    <TextView
+        android:id="@+id/wind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Large"
+        tool:text="4km/h NW"/>
+
+</LinearLayout>

@@ -214,23 +214,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mForecastAdapter.swapCursor(null);
     }
 
-    /**
-     * This method is for responding to clicks from our list.
-     *
-     * @param weatherForDay String describing weather details for a particular day
-     */
 
     @Override
-    public void onClick(String weatherForDay){
-        Context context = this;
-
+    public void onClick(long date){
         // Remove the Toast and launch the DetailActivity using an explicit Intent
-        Class destinationClass = DetailActivity.class;
-        Intent intentToDetailActivity = new Intent(context, destinationClass);
+        Intent intentDetailWeather = new Intent(MainActivity.this, DetailActivity.class);
 
-        //Pass the weather to the DetailActivity by implicit Intent
-        intentToDetailActivity.putExtra(Intent.EXTRA_TEXT, weatherForDay);
-        startActivity(intentToDetailActivity);
+        //Refactor onClick to pass the URI for the clicked date with the Intent
+        Uri uriForDateClicked = WeatherContract.WeatherEntry.buildWeatherUriWithDate(date);
+        intentDetailWeather.setData(uriForDateClicked);
+        startActivity(intentDetailWeather);
     }
 
     //Create a method called showWeatherDataView that will hide the error message and show the weather data

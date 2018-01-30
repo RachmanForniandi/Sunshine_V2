@@ -76,6 +76,13 @@
     <!-- Used by SunshineWeatherUtils-->
     <!-- - - - - - - - - - - - - - - -->
 
+    <!-- Temperature format -->
+    <string name="format_temperature">
+        <xliff:g id="temp">%1.0f</xliff:g>\u00B0
+    </string>
+
+    <string name="wind_label">Wind</string>
+
     <!-- Temperature format in Celsius [CHAR LIMIT=5] -->
     <string name="format_temperature_celsius">
         <xliff:g id="temp">%1.0f</xliff:g>\u00B0C
@@ -95,6 +102,18 @@
     <string name="format_wind_mph">
         <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g>
     </string>
+
+    <string name="pressure_label">Pressure</string>
+    <!-- Pressure format -->
+    <string name="format_pressure">
+        <xliff:g id="pressure">%1.0f</xliff:g> hPa
+    </string>
+
+    <string name="humidity_label">Humidity</string>
+    <!-- Humidity format -->
+    <string name="format_humidity">
+        <xliff:g id="humidity">%1.0f</xliff:g> %%
+</string>
 
     <!-- Weather Conditions (From OpenWeatherMap) -->
     <string name="condition_2xx">Storm</string>
