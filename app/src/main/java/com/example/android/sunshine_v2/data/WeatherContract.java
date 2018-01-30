@@ -22,21 +22,24 @@ public class WeatherContract {
      * Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
      * the content provider for Sunshine.
      */
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" +CONTENT_AUTHORITY);
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     /* Used internally as the name of our weather table. */
     public static final String PATH_FOR_WEATHER = "weather";
 
     //Within WeatherContract, create a public static final class called WeatherEntry that implements BaseColumns
     public static final class WeatherEntry implements BaseColumns{
+
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_FOR_WEATHER)
                 .build();
 
         //Create a public static final String call TABLE_NAME with the value "weather"
         public static final String TABLE_NAME = "weather";
+
         //Create a public static final String call COLUMN_DATE with the value "date"
         public static final String COLUMN_DATE = "date";
+
         //Create a public static final String call COLUMN_WEATHER_ID with the value "weather_id"
         public static final String COLUMN_WEATHER_ID = "weather_id";
         //Create a public static final String call COLUMN_MIN_TEMP with the value "min"
@@ -75,7 +78,7 @@ public class WeatherContract {
          */
         public static String getSqlSelectForTodayOnWards(){
             long normalizedUtcNow = SunshineDateUtils.normalizeDate(System.currentTimeMillis());
-            return WeatherEntry.COLUMN_DATE + " >= " + normalizedUtcNow;
+            return WeatherContract.WeatherEntry.COLUMN_DATE + " >= " + normalizedUtcNow;
         }
     }
 

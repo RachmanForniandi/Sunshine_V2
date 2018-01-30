@@ -93,10 +93,10 @@ public class WeatherProvider extends ContentProvider {
                     for(ContentValues value : values){
                         long weatherDate = value.getAsLong(WeatherContract.WeatherEntry.COLUMN_DATE);
                         if (!SunshineDateUtils.isDateNormalized(weatherDate)){
-                            throw new IllegalArgumentException("The data must be normalized to insert");
+                            throw new IllegalArgumentException("Date must be normalized to insert");
                         }
 
-                        long _id = db.insert(WeatherContract.WeatherEntry.TABLE_NAME, null,value);
+                        long _id = db.insert(WeatherContract.WeatherEntry.TABLE_NAME, null, value);
                         if (_id != -1){
                             rowsInserted++;
                         }
@@ -114,7 +114,8 @@ public class WeatherProvider extends ContentProvider {
                 return rowsInserted;
 
                 //If the URI does match match CODE_WEATHER, return the super implementation of bulkInsert
-                default:return super.bulkInsert(uri,values);
+                default:
+                    return super.bulkInsert(uri,values);
         }
     }
 
@@ -159,7 +160,7 @@ public class WeatherProvider extends ContentProvider {
                          * within the selectionArguments array will be inserted into the
                          * selection statement by SQLite under the hood.
                          */
-                        WeatherContract.WeatherEntry.COLUMN_DATE + "= ?",
+                        WeatherContract.WeatherEntry.COLUMN_DATE + " = ? ",
                         selectionArguments,
                         null,
                         null,
