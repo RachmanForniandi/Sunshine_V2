@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getSupportLoaderManager().initLoader(ID_FORECAST_LOADER,null, this);
 
         //Call SunshineSyncUtils's startImmediateSync method
-        SunshineSyncUtils.startImmediateSync(this);
+        SunshineSyncUtils.initialize(this);
     }
 
     /**
