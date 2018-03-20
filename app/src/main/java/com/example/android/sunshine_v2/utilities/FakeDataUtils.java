@@ -35,13 +35,15 @@ public class FakeDataUtils {
     }
 
     public static void insertFakeData(Context context){
+        //Get today's normalized date
         long today = SunshineDateUtils.normalizeDate(System.currentTimeMillis());
         List<ContentValues>fakeValues = new ArrayList<ContentValues>();
-
+        //loop over 7 days starting today onwards
         for (int i=0; i<7; i++){
             fakeValues.add(FakeDataUtils.createTestWeatherContentValues(today + TimeUnit.DAYS.toMillis(i)));
         }
 
+        // Bulk Insert our new weather data into Sunshine's Database
         context.getContentResolver().bulkInsert(
                 WeatherContract.WeatherEntry.CONTENT_URI,
                 fakeValues.toArray(new ContentValues[7])

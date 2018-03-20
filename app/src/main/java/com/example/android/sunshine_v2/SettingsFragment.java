@@ -1,5 +1,6 @@
 package com.example.android.sunshine_v2;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
@@ -8,15 +9,19 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 
+import com.example.android.sunshine_v2.data.SunshinePreferences;
+import com.example.android.sunshine_v2.data.WeatherContract;
+import com.example.android.sunshine_v2.sync.SunshineSyncUtils;
+
 /**
  * Created by USER on 12/01/2018.
  */
 
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragmentCompat implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private void setPreferenceSummary(Preference preference, Object value){
         String stringValue = value.toString();
-        String key = preference.getKey();
 
         if (preference instanceof ListPreference){
             /* For list preferences, look up the correct display value in */
@@ -34,6 +39,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String s) {
+        // Add 'general' preferences, defined in the XML file
         addPreferencesFromResource(R.xml.pref_general);
 
         SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
@@ -65,11 +71,23 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String asKey) {
-        Preference preference = findPreference(asKey);
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Activity activity = getActivity();
+
+        if (key.equals(getString(R.string.pref_location_key))){
+            // change the location Wipe out any potential PlacePicker latlng
+            // values so that we can use this text entry.
+            SunshinePreferences.resetLocationCoordinates(activity);
+            //Sync the weather if the location changes
+            SunshineSyncUtils.startImmediateSync(activity);
+        }else if (key.equals(getString(R.string.pref_units_key))){
+            // units have changed. update lists of weather entries accordingly
+            activity.getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI,null);
+        }
+        Preference preference = findPreference(key);
         if (null != preference){
-            if (!(preference instanceof  CheckBoxPreference)){
-                setPreferenceSummary(preference, sharedPreferences.getString(asKey, ""));
+            if (!(preference instanceof CheckBoxPreference)){
+                setPreferenceSummary(preference, sharedPreferences.getString(key, ""));
             }
         }
     }

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.example.android.sunshine_v2.adapter.ForecastAdapter;
 import com.example.android.sunshine_v2.data.SunshinePreferences;
 import com.example.android.sunshine_v2.data.WeatherContract;
+import com.example.android.sunshine_v2.sync.SunshineSyncUtils;
 import com.example.android.sunshine_v2.utilities.FakeDataUtils;
 import com.example.android.sunshine_v2.utilities.NetworkUtils;
 import com.example.android.sunshine_v2.utilities.OpenWeatherJsonUtils;
@@ -62,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
         getSupportActionBar().setElevation(0f);
-
-        FakeDataUtils.insertFakeData(this);
 
         //Use findViewById to get a reference to the weather display TextView
         /*
@@ -118,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
          * the last created loader is re-used.
          */
         getSupportLoaderManager().initLoader(ID_FORECAST_LOADER,null, this);
+
+        //Call SunshineSyncUtils's startImmediateSync method
+        SunshineSyncUtils.startImmediateSync(this);
     }
 
     /**
