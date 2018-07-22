@@ -8,6 +8,7 @@
     <string name="action_share">Share</string>
     <string name="action_settings">Settings</string>
 
+
     <!-- Title of the DetailActivity -->
     <string name="title_activity_detail">Details</string>
     <!-- Title of the SettingsActivity -->
