@@ -22,7 +22,8 @@ import com.example.android.sunshine_v2.utilities.SunshineWeatherUtils;
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapterViewHolder>{
 
     private final Context mContext;
-
+    private static final int VIEW_TYPE_TODAY = 0;
+    private static final int VIEW_TYPE_FUTURE_DAY = 1;
     /*
      * Below, we've defined an interface to handle clicks on items within this Adapter. In the
      * constructor of our ForecastAdapter, we receive an instance of a class that has implemented
@@ -37,11 +38,14 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     }
 
     private Cursor mCursor;
+    private boolean mUseTodayLayout;
 
     public ForecastAdapter(@NonNull Context context, ForecastAdapterOnclickHandler clickHandler){
         mContext = context;
         mClickHandler = clickHandler;
+        mUseTodayLayout = mContext.getResources().getBoolean(R.bool.use_today_layout);
     }
+
 
     class ForecastAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView dateView;
@@ -50,6 +54,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         final TextView lowTempView;
 
         final ImageView iconView;
+
+
 
         ForecastAdapterViewHolder(View view){
             super(view);
@@ -84,9 +90,26 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
      */
     @Override
     public ForecastAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        int layoutId;
+
+        switch (viewType){
+            case VIEW_TYPE_TODAY:{
+                layoutId = R.layout.list_item_forecast_today;
+                break;
+            }
+            case VIEW_TYPE_FUTURE_DAY:{
+                layoutId = R.layout.forecast_list_item;
+                break;
+            }
+
+            default:
+                throw new IllegalArgumentException("Invalid view type, value of " + viewType);
+        }
+
         View view = LayoutInflater.from(mContext)
                 .inflate(R.layout.forecast_list_item,viewGroup,false);
         view.setFocusable(true);
+
         return new ForecastAdapterViewHolder(view);
     }
 
@@ -110,6 +133,20 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
          ****************/
         int weatherId = mCursor.getInt(MainActivity.INDEX_WEATHER_CONDITION_ID);
         int weatherImageId;
+        int viewType = getItemViewType(position);
+
+        switch (viewType){
+            case VIEW_TYPE_TODAY:
+                weatherImageId = SunshineWeatherUtils
+                        .getLargeArtResourceIdForWeatherCondition(weatherId);
+                break;
+            case VIEW_TYPE_FUTURE_DAY:
+                weatherImageId = SunshineWeatherUtils
+                        .getSmallArtResourceIdForWeatherCondition(weatherId);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid view type, value of " + viewType);
+        }
 
         weatherImageId = SunshineWeatherUtils.getSmallArtResourceIdForWeatherCondition(weatherId);
 
@@ -182,6 +219,25 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     public int getItemCount() {
         if (null == mCursor)return 0;
         return mCursor.getCount();
+    }
+
+    /**
+     * Returns an integer code related to the type of View we want the ViewHolder to be at a given
+     * position. This method is useful when we want to use different layouts for different items
+     * depending on their position. In Sunshine, we take advantage of this method to provide a
+     * different layout for the "today" layout. The "today" layout is only shown in portrait mode
+     * with the first item in the list.
+     *
+     * @param position index within our RecyclerView and Cursor
+     * @return the view type (today or future day)
+     */
+    @Override
+    public int getItemViewType(int position){
+        if (mUseTodayLayout && position ==0){
+            return VIEW_TYPE_TODAY;
+        }else {
+            return VIEW_TYPE_FUTURE_DAY;
+        }
     }
 
     //Create a new method that allows you to swap Cursors.
