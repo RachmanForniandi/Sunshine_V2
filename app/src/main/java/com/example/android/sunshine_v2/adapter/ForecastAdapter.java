@@ -45,38 +45,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         mClickHandler = clickHandler;
         mUseTodayLayout = mContext.getResources().getBoolean(R.bool.use_today_layout);
     }
-
-
-    class ForecastAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView dateView;
-        final TextView descriptionView;
-        final TextView hightTempView;
-        final TextView lowTempView;
-
-        final ImageView iconView;
-
-
-
-        ForecastAdapterViewHolder(View view){
-            super(view);
-            iconView =(ImageView) view.findViewById(R.id.weather_icon);
-            dateView = (TextView) view.findViewById(R.id.date);
-            descriptionView = (TextView) view.findViewById(R.id.weather_description);
-            hightTempView =(TextView) view.findViewById(R.id.high_temperature);
-            lowTempView = (TextView) view.findViewById(R.id.low_temperature);
-            view.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            //Instead of passing the String for the clicked item, pass the date from the cursor
-            mCursor.moveToPosition(adapterPosition);
-            long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE);
-            mClickHandler.onClick(dateInMillis);
-        }
-    }
-
     /**
      * This gets called when each new ViewHolder is created. This happens when the RecyclerView
      * is laid out. Enough ViewHolders will be created to fill the screen and allow for scrolling.
@@ -107,7 +75,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         }
 
         View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.forecast_list_item,viewGroup,false);
+                .inflate(layoutId,viewGroup,false);
         view.setFocusable(true);
 
         return new ForecastAdapterViewHolder(view);
@@ -148,8 +116,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
                 throw new IllegalArgumentException("Invalid view type, value of " + viewType);
         }
 
-        weatherImageId = SunshineWeatherUtils.getSmallArtResourceIdForWeatherCondition(weatherId);
-
         forecastAdapterViewHolder.iconView.setImageResource(weatherImageId);
 
         /****************
@@ -162,11 +128,12 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         /* Get human readable string using our utility method */
         String dateString = SunshineDateUtils.getFriendlyDateString(mContext,dateInMillis, false);
 
+        forecastAdapterViewHolder.dateView.setText(dateString);
         /***********************
          * Weather Description *
          ***********************/
 
-         /* Use the weatherId to obtain the proper description */
+        /* Use the weatherId to obtain the proper description */
         String description = SunshineWeatherUtils.getStringForWeatherCondition(mContext, weatherId);
 
         /* Create the accessibility (a11y) String from the weather description */
@@ -181,7 +148,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
          **************************/
         /* Read high temperature from the cursor (in degrees celsius) */
         double highInCelsius = mCursor.getDouble(MainActivity.INDEX_WEATHER_MAX_TEMP);
-
         /*
          * If the user's preference for weather is fahrenheit, formatTemperature will convert
          * the temperature. This method will also append either °C or °F to the temperature
@@ -192,8 +158,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         String highAlly = mContext.getString(R.string.a11y_high_temp, highString);
 
         /* Set the text and content description (for accessibility purposes) */
-        forecastAdapterViewHolder.hightTempView.setText(highString);
-        forecastAdapterViewHolder.hightTempView.setContentDescription(highAlly);
+        forecastAdapterViewHolder.highTempView.setText(highString);
+        forecastAdapterViewHolder.highTempView.setContentDescription(highAlly);
 
         /*************************
          * Low (min) temperature *
@@ -253,4 +219,43 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         mCursor = newCursor;
         notifyDataSetChanged();
     }
+
+    class ForecastAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        final TextView dateView;
+        final TextView descriptionView;
+        final TextView highTempView;
+        final TextView lowTempView;
+        final ImageView iconView;
+
+        ForecastAdapterViewHolder(View view){
+            super(view);
+
+            iconView =(ImageView) view.findViewById(R.id.weather_icon);
+            dateView = (TextView) view.findViewById(R.id.date);
+            descriptionView = (TextView) view.findViewById(R.id.weather_description);
+            highTempView =(TextView) view.findViewById(R.id.high_temperature);
+            lowTempView = (TextView) view.findViewById(R.id.low_temperature);
+
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            //Instead of passing the String for the clicked item, pass the date from the cursor
+            mCursor.moveToPosition(adapterPosition);
+            long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE);
+            mClickHandler.onClick(dateInMillis);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 }
