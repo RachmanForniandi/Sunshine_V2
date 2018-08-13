@@ -74,7 +74,6 @@
             android:textSize="36sp"
             app:layout_constraintBaseline_toBaselineOf="@id/weather_description"
             app:layout_constraintLeft_toLeftOf="@id/high_temperature"
-            app:layout_constraintRight_toRightOf="@id/high_temperature"
             tools:text="10\u00b0"/>
     </android.support.constraint.ConstraintLayout>
 
